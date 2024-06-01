@@ -2727,15 +2727,15 @@ function on_gui()
 
   -- SPECIAL GAUGES TRIGGER (KAITEN, DENJIN, ETC)
   if is_in_match and training_settings.display_special_gauges then
-    offsetX           = 180
-    offsetY           = 180
-    offsetKaitenGauge = 14
-    kaitenView        = 1
-    denjinView        = 1
-    tameView          = 1
-    rendaView         = 1
-    dashiteruWaza     = "S00280028"
-    denjinLv          = 0
+    -- offsetX           = 180
+    -- offsetY           = 180
+    -- offsetKaitenGauge = 14
+    -- kaitenView        = 1
+    -- denjinView        = 1
+    -- chargeView        = 1
+    -- lightningLegsView = 1
+    -- dashiteruWaza     = "S00280028"
+    -- denjinLv          = 0
 
     function bitReturn(value, bitnum)
       re = value
@@ -2744,11 +2744,11 @@ function on_gui()
       return re
     end
 
-    function tameGauge(str, x, y, address_tame, address_timer)
+    function chargeGauge(str, x, y, address_charge, address_timer)
       gui.text(x - 20, y, str)
-      if memory.readbyte(address_tame) ~= 0xFF then
+      if memory.readbyte(address_charge) ~= 0xFF then
         gui.drawbox(x, y, x + 42, y + assistHaba, 0x00000000, 0x000000FF)
-        gui.drawbox(x, y, x + (memory.readbyte(address_tame)), y + assistHaba, 0x0080FFFF, 0x000000FF)
+        gui.drawbox(x, y, x + (memory.readbyte(address_charge)), y + assistHaba, 0x0080FFFF, 0x000000FF)
       else
         gui.drawbox(x, y, x + 42, y + assistHaba, 0x00000000, 0xFEFEFEFF)
       end
@@ -2804,24 +2804,27 @@ function on_gui()
 
     function assistMode()
       assistHaba = 2
-      tameView = 1
+      chargeView = 1
       kaitenView = 1
-      rendaView = 1
+      lightningLegsView = 1
       denjinView = 1
+      dashiteruWaza = "S00280028"
       --airTimerView()
-      offsetTameGauge = 8
-      offsetRendaGauge = 8
+
+      --GUI--
+      offsetChargeGauge = 8
+      offsetLightningLegsGauge = 8
       offsetKaitenGauge = 14
       denjinHaba = 4
-      rendaHaba = 4
+      lightningLegsWidth = 4
       if memory.readbyte(0x2011387) == 0x01 then
         offsetX = 180
         offsetY = 180
-        if tameView == 1 then
-          tameGauge("4-6K", offsetX, offsetY, 0x02025A49, 0x02025A47)
-          offsetY = offsetY + offsetTameGauge
-          tameGauge("2-8K", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
-          offsetY = offsetY + offsetTameGauge
+        if chargeView == 1 then
+          chargeGauge("4-6K", offsetX, offsetY, 0x02025A49, 0x02025A47)
+          offsetY = offsetY + offsetChargeGauge
+          chargeGauge("2-8K", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
+          offsetY = offsetY + offsetChargeGauge
         end
         if kaitenView == 1 then
           if memory.readbyte(0x020154D3) == 0 then
@@ -2976,10 +2979,10 @@ function on_gui()
       if memory.readbyte(0x2011387) == 0x09 then
         offsetX = 180
         offsetY = 180
-        if tameView == 1 then
-          tameGauge("4-6P", offsetX, offsetY, 0x02025A11, 0x02025A0F)
-          offsetY = offsetY + offsetTameGauge
-          tameGauge("2-8P", offsetX, offsetY, 0x020259D9, 0x020259D7)
+        if chargeView == 1 then
+          chargeGauge("4-6P", offsetX, offsetY, 0x02025A11, 0x02025A0F)
+          offsetY = offsetY + offsetChargeGauge
+          chargeGauge("2-8P", offsetX, offsetY, 0x020259D9, 0x020259D7)
         end
       end
       if memory.readbyte(0x2011387) == 0x0A then
@@ -2991,12 +2994,12 @@ function on_gui()
       if memory.readbyte(0x2011387) == 0x0D then
         offsetX = 180
         offsetY = 180
-        if tameView == 1 then
-          tameGauge("4-6K", offsetX, offsetY, 0x020259D9, 0x020259D7)
-          offsetY = offsetY + offsetTameGauge
-          tameGauge("2-8P", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
-          offsetY = offsetY + offsetTameGauge
-          tameGauge("2-8K", offsetX, offsetY, 0x020259F5, 0x020259F3)
+        if chargeView == 1 then
+          chargeGauge("4-6K", offsetX, offsetY, 0x020259D9, 0x020259D7)
+          offsetY = offsetY + offsetChargeGauge
+          chargeGauge("2-8P", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
+          offsetY = offsetY + offsetChargeGauge
+          chargeGauge("2-8K", offsetX, offsetY, 0x020259F5, 0x020259F3)
         end
       end
       if memory.readbyte(0x2011387) == 0x0E then
@@ -3006,26 +3009,27 @@ function on_gui()
       if memory.readbyte(0x2011387) == 0x10 then
         offsetX = 170
         offsetY = 160
-        if rendaView == 1 then
-          gui.text(offsetX, offsetY, "LK renda" .. " : " .. memory.readbyte(0x02025A03))
-          offsetY = offsetY + offsetRendaGauge
-          gui.text(offsetX, offsetY, "MK renda" .. " : " .. memory.readbyte(0x02025A05))
-          offsetY = offsetY + offsetRendaGauge
-          gui.text(offsetX, offsetY, "HK renda" .. " : " .. memory.readbyte(0x02025A07))
-          offsetY = offsetY + offsetRendaGauge
-          gui.text(offsetX - 24, offsetY, "renda")
+        if lightningLegsView == 1 then
+          gui.text(offsetX, offsetY, "LK legs" .. " : " .. memory.readbyte(0x02025A03))
+          offsetY = offsetY + offsetLightningLegsGauge
+          gui.text(offsetX, offsetY, "MK legs" .. " : " .. memory.readbyte(0x02025A05))
+          offsetY = offsetY + offsetLightningLegsGauge
+          gui.text(offsetX, offsetY, "HK legs" .. " : " .. memory.readbyte(0x02025A07))
+          offsetY = offsetY + offsetLightningLegsGauge
+          gui.text(offsetX - 20, offsetY, "Legs")
           offsetY = offsetY + 1
           if memory.readbyte(0x02025A2D) ~= 0xFF then
-            gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + rendaHaba, 0x00000000, 0x000000FF)
-            gui.drawbox(offsetX, offsetY, offsetX + ((memory.readbyte(0x020259f3) / 2)), offsetY + rendaHaba, 0xFF8080FF,
+            gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + lightningLegsWidth, 0x00000000, 0x000000FF)
+            gui.drawbox(offsetX, offsetY, offsetX + ((memory.readbyte(0x020259f3) / 2)), offsetY + lightningLegsWidth,
+              0xFF8080FF,
               0x000000FF)
           else
-            gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + rendaHaba, 0x00000000, 0xFEFEFEFF)
+            gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + lightningLegsWidth, 0x00000000, 0xFEFEFEFF)
           end
-          offsetY = offsetY + offsetRendaGauge
+          offsetY = offsetY + offsetLightningLegsGauge
         end
-        if tameView == 1 then
-          tameGauge("2-8K", offsetX, offsetY, 0x020259D9, 0x020259D7)
+        if chargeView == 1 then
+          chargeGauge("2-8K", offsetX, offsetY, 0x020259D9, 0x020259D7)
         end
       end
       if memory.readbyte(0x2011387) == 0x11 then
@@ -3033,10 +3037,10 @@ function on_gui()
       if memory.readbyte(0x2011387) == 0x12 then
         offsetX = 180
         offsetY = 180
-        if tameView == 1 then
-          tameGauge("4-6P", offsetX, offsetY, 0x020259D9, 0x020259D7)
-          offsetY = offsetY + offsetTameGauge
-          tameGauge("4-6K", offsetX, offsetY, 0x020259F5, 0x020259F3)
+        if chargeView == 1 then
+          chargeGauge("4-6P", offsetX, offsetY, 0x020259D9, 0x020259D7)
+          offsetY = offsetY + offsetChargeGauge
+          chargeGauge("4-6K", offsetX, offsetY, 0x020259F5, 0x020259F3)
         end
       end
       if memory.readbyte(0x2011387) == 0x13 then
@@ -3044,12 +3048,12 @@ function on_gui()
       if memory.readbyte(0x2011387) == 0x14 then
         offsetX = 180
         offsetY = 180
-        if tameView == 1 then
-          tameGauge("4-6P", offsetX, offsetY, 0x020259F5, 0x020259F3)
-          offsetY = offsetY + offsetTameGauge
-          tameGauge("4-6K", offsetX, offsetY, 0x02025A11, 0x02025A0F)
-          offsetY = offsetY + offsetTameGauge
-          tameGauge("2-8K", offsetX, offsetY, 0x020259D9, 0x020259D7)
+        if chargeView == 1 then
+          chargeGauge("4-6P", offsetX, offsetY, 0x020259F5, 0x020259F3)
+          offsetY = offsetY + offsetChargeGauge
+          chargeGauge("4-6K", offsetX, offsetY, 0x02025A11, 0x02025A0F)
+          offsetY = offsetY + offsetChargeGauge
+          chargeGauge("2-8K", offsetX, offsetY, 0x020259D9, 0x020259D7)
         end
       end
     end
