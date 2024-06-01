@@ -1106,7 +1106,6 @@ function update_blocking(_input, _player, _dummy, _mode, _style, _red_parry_hit_
 
           if _predicted_hit.hit_id > _dummy.blocking.last_attack_hit_id and test_collision(
                 _next_defender_pos[1], _next_defender_pos[2], _dummy.flip_x, _defender_boxes,                -- defender
-                ---@diagnostic disable-next-line: undefined-field
                 _predicted_hit.pos_x, _predicted_hit.pos_y, _player.flip_x, _predicted_hit.frame_data.boxes, -- attacker
                 _box_type_matches,
                 0,                                                                                           -- defender hitbox dilation x
@@ -2512,7 +2511,6 @@ end
 is_menu_open = false
 
 function on_gui()
-  ---@diagnostic disable-next-line: undefined-field
   if P1.input.pressed.start then
     clear_printed_geometry()
   end
@@ -2591,7 +2589,6 @@ function on_gui()
     if debug_settings.show_predicted_hitbox then
       local _predicted_hit = predict_hitboxes(player, 2)
       if _predicted_hit.frame_data then
-        ---@diagnostic disable-next-line: undefined-field
         draw_hitboxes(_predicted_hit.pos_x, _predicted_hit.pos_y, player.flip_x, _predicted_hit.frame_data.boxes)
       end
     end
@@ -2627,9 +2624,7 @@ function on_gui()
     local _gauge_x_scale = 4
 
     if training_settings.special_training_follow_character then
-      ---@diagnostic disable-next-line: undefined-field
       local _px = _player.pos_x - screen_x + emu.screenwidth() / 2
-      ---@diagnostic disable-next-line: undefined-field
       local _py = emu.screenheight() - (_player.pos_y - screen_y) - ground_offset
       local _half_width = 23 * _gauge_x_scale * 0.5
       _x = _px - _half_width
@@ -2706,22 +2701,18 @@ function on_gui()
 
     local _parry_array = {
       {
-        ---@diagnostic disable-next-line: undefined-field
         object = _player.parry_forward,
         enabled = training_settings.special_training_parry_forward_on
       },
       {
-        ---@diagnostic disable-next-line: undefined-field
         object = _player.parry_down,
         enabled = training_settings.special_training_parry_down_on
       },
       {
-        ---@diagnostic disable-next-line: undefined-field
         object = _player.parry_air,
         enabled = training_settings.special_training_parry_air_on
       },
       {
-        ---@diagnostic disable-next-line: undefined-field
         object = _player.parry_antiair,
         enabled = training_settings.special_training_parry_antiair_on
       }
