@@ -1,4 +1,4 @@
----@diagnostic disable: need-check-nil, duplicate-set-field, inject-field, redefined-local
+---@diagnostic disable: need-check-nil, duplicate-set-field, inject-field, redefined-local, undefined-field
 require("src/startup")
 
 print("-----------------------------")
@@ -46,7 +46,7 @@ it'd need its own menu for setup that would be used just like the "recording" re
 So like you do your first choice and want opponent to throw, but second time you want them to either throw, or do option 2 or 3  etc etc
 And also having throw as an option there as well so you have one less option to record if you don't want a button action
 ]]
-   --
+--
 
 -- Includes
 require("src/tools")
@@ -150,7 +150,7 @@ function process_pending_input_sequence(_player_obj, _input)
   if _player_obj.pending_input_sequence.current_frame >= 1 then
     local _s = ""
     local _current_frame_input = _player_obj.pending_input_sequence.sequence
-    [_player_obj.pending_input_sequence.current_frame]
+        [_player_obj.pending_input_sequence.current_frame]
     for i = 1, #_current_frame_input do
       local _input_name = _player_obj.prefix .. " "
       if _current_frame_input[i] == "forward" then
@@ -699,9 +699,9 @@ function update_pose(_input, _player_obj, _pose)
 
     if _pose == 2 and (_on_ground or _is_waking_up) then -- crouch
       _input[_player_obj.prefix .. ' Down'] = true
-    elseif _pose == 3 and _on_ground then              -- jump
+    elseif _pose == 3 and _on_ground then                -- jump
       _input[_player_obj.prefix .. ' Up'] = true
-    elseif _pose == 4 then                             -- high jump
+    elseif _pose == 4 then                               -- high jump
       if _on_ground and not is_playing_input_sequence(_player_obj) then
         queue_input_sequence(_player_obj, { { "down" }, { "up" } })
       end
@@ -1105,14 +1105,14 @@ function update_blocking(_input, _player, _dummy, _mode, _style, _red_parry_hit_
           local _defender_boxes = predict_hurtboxes(_dummy, _frame_delta)
 
           if _predicted_hit.hit_id > _dummy.blocking.last_attack_hit_id and test_collision(
-                _next_defender_pos[1], _next_defender_pos[2], _dummy.flip_x, _defender_boxes,            -- defender
+                _next_defender_pos[1], _next_defender_pos[2], _dummy.flip_x, _defender_boxes,                -- defender
                 ---@diagnostic disable-next-line: undefined-field
                 _predicted_hit.pos_x, _predicted_hit.pos_y, _player.flip_x, _predicted_hit.frame_data.boxes, -- attacker
                 _box_type_matches,
-                0,                                                                                       -- defender hitbox dilation x
-                4,                                                                                       -- defender hitbox dilation y
-                _attacker_box_dilation,                                                                  -- x
-                _attacker_box_dilation                                                                   -- y
+                0,                                                                                           -- defender hitbox dilation x
+                4,                                                                                           -- defender hitbox dilation y
+                _attacker_box_dilation,                                                                      -- x
+                _attacker_box_dilation                                                                       -- y
               ) then
             _dummy.blocking.expected_attack_animation_hit_frame = _predicted_hit.frame
             _dummy.blocking.expected_attack_hit_id = _predicted_hit.hit_id
@@ -1183,7 +1183,7 @@ function update_blocking(_input, _player, _dummy, _mode, _style, _red_parry_hit_
           local _movement = nil
           local _lifetime = _projectile_obj.lifetime
           local _projectile_meta_data = frame_data_meta[_player.char_str].projectiles
-          [_projectile_obj.projectile_start_type]
+              [_projectile_obj.projectile_start_type]
           if _projectile_meta_data ~= nil then
             _movement = _projectile_meta_data.movement
           end
@@ -1260,7 +1260,7 @@ function update_blocking(_input, _player, _dummy, _mode, _style, _red_parry_hit_
       end
     elseif _dummy.blocking.should_block_projectile then
       local _frame_data_meta = frame_data_meta[_player.char_str].projectiles
-      [_dummy.blocking.expected_projectile.projectile_type]
+          [_dummy.blocking.expected_projectile.projectile_type]
       if _frame_data_meta then
         _hit_type = _frame_data_meta.type
       end
@@ -1407,7 +1407,7 @@ function update_counter_attack(_input, _attacker, _defender, _stick, _button)
     end
     log(_defender.prefix, "counter_attack", "init ca (wakeup)")
     _defender.counter.attack_frame = frame_number + _defender.remaining_wakeup_time +
-    1                                                                                   -- the +1 here means that there is an error somehere but I don't know where. the remaining wakeup time seems ok
+        1 -- the +1 here means that there is an error somehere but I don't know where. the remaining wakeup time seems ok
     _defender.counter.sequence, _defender.counter.offset = make_input_sequence(stick_gesture[_stick],
       button_gesture[_button])
     _defender.counter.ref_time = -1
@@ -1522,7 +1522,7 @@ function update_tech_throws(_input, _attacker, _defender, _mode)
           _defender.pos_x, _defender.pos_y, _defender.flip_x, _defender.boxes, -- defender
           _attacker.pos_x, _attacker.pos_y, _attacker.flip_x, _attacker.boxes, -- attacker
           { { { "throwable" }, { "throw" } } },
-          0,                                                               -- defender hitbox dilation
+          0,                                                                   -- defender hitbox dilation
           0
         ) then
       _defender.throw.listening = false
@@ -1942,7 +1942,7 @@ function can_play_recording()
     end
   else
     return recording_slots[training_settings.current_recording_slot].inputs ~= nil and
-    #recording_slots[training_settings.current_recording_slot].inputs > 0
+        #recording_slots[training_settings.current_recording_slot].inputs > 0
   end
   return false
 end
@@ -2074,7 +2074,7 @@ function update_recording(_input)
   if is_in_match and not is_menu_open then
     -- manage input
     local _input_pressed = (not swap_characters and player.input.pressed.coin) or
-    (swap_characters and dummy.input.pressed.coin)
+        (swap_characters and dummy.input.pressed.coin)
     if _input_pressed then
       if frame_number < (last_coin_input_frame + _input_buffer_length) then
         last_coin_input_frame = -1
@@ -2496,7 +2496,7 @@ function before_frame()
       local _movement = nil
       local _lifetime = _obj.lifetime
       local _projectile_meta_data = frame_data_meta[player_objects[_obj.emitter_id].char_str].projectiles
-      [_obj.projectile_type]
+          [_obj.projectile_type]
       if _projectile_meta_data ~= nil then
         _movement = _projectile_meta_data.movement
       end
@@ -2591,6 +2591,7 @@ function on_gui()
     if debug_settings.show_predicted_hitbox then
       local _predicted_hit = predict_hitboxes(player, 2)
       if _predicted_hit.frame_data then
+        ---@diagnostic disable-next-line: undefined-field
         draw_hitboxes(_predicted_hit.pos_x, _predicted_hit.pos_y, player.flip_x, _predicted_hit.frame_data.boxes)
       end
     end
