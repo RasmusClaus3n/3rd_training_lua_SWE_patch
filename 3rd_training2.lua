@@ -2809,6 +2809,8 @@ function on_gui()
       lightningLegsView = 1
       denjinView = 1
       dashiteruWaza = "S00280028"
+      denjinLv = 0
+      denjinTimer = 0
       --airTimerView()
 
       --GUI--
@@ -2838,12 +2840,28 @@ function on_gui()
         if denjinView == 1 then
           if memory.readbyte(0x020154D3) == 2 then
             barColor = 0x00000000
-            if dashiteruWaza == "S00280028" or dashiteruWaza == "N0028000d"
-                or dashiteruWaza == "N00280013" or dashiteruWaza == "N00280014" or dashiteruWaza == "N00280015" or dashiteruWaza == "N00280016" or dashiteruWaza == "N00280017"
-                or dashiteruWaza == "S00290028" or dashiteruWaza == "N0029000d"
-                or dashiteruWaza == "N00290013" or dashiteruWaza == "N00290014" or dashiteruWaza == "N00290015" or dashiteruWaza == "N00290016" or dashiteruWaza == "N00290017"
-                or dashiteruWaza == "S002a0028" or dashiteruWaza == "N002a000d"
-                or dashiteruWaza == "N002a0013" or dashiteruWaza == "N002a0014" or dashiteruWaza == "N002a0015" or dashiteruWaza == "N002a0016" or dashiteruWaza == "N002a0017" then
+            if dashiteruWaza == "S00280028"
+                or dashiteruWaza == "N0028000d"
+                or dashiteruWaza == "N00280013"
+                or dashiteruWaza == "N00280014"
+                or dashiteruWaza == "N00280015"
+                or dashiteruWaza == "N00280016"
+                or dashiteruWaza == "N00280017"
+                or dashiteruWaza == "S00290028"
+                or dashiteruWaza == "N0029000d"
+                or dashiteruWaza == "N00290013"
+                or dashiteruWaza == "N00290014"
+                or dashiteruWaza == "N00290015"
+                or dashiteruWaza == "N00290016"
+                or dashiteruWaza == "N00290017"
+                or dashiteruWaza == "S002a0028"
+                or dashiteruWaza == "N002a000d"
+                or dashiteruWaza == "N002a0013"
+                or dashiteruWaza == "N002a0014"
+                or dashiteruWaza == "N002a0015"
+                or dashiteruWaza == "N002a0016"
+                or dashiteruWaza == "N002a0017"
+            then
               denjinTimer = memory.readbyte(0x02068D27)
               denjin = memory.readbyte(0x02068D2D)
               if denjin == 3 then
@@ -2887,7 +2905,7 @@ function on_gui()
             if memory.readbyte(0x02068D27) ~= 0 then
             end
           end
-        end
+        end --Denjin view end
       end
       if memory.readbyte(0x2011387) == 0x03 then
       end
