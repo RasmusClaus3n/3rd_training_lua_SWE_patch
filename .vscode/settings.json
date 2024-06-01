@@ -1,0 +1,4 @@
+{
+  "Lua.diagnostics.disable": ["lowercase-global", "undefined-global"],
+  "Lua.diagnostics.globals": ["joypad"]
+}
