@@ -1,4 +1,4 @@
--- SPECIAL GAUGES TRIGGER (KAITEN, DENJIN, ETC)
+-- Helper functions
 
 function bitReturn(value, bitnum)
     re = value
@@ -7,11 +7,15 @@ function bitReturn(value, bitnum)
     return re
 end
 
-function chargeGauge(str, x, y, address_charge, address_timer)
-    gui.text(x - 20, y, str)
-    if memory.readbyte(address_charge) ~= 0xFF then
+function chargeGauge(str, x, y, charge_move, address_timer, x_adjust_left)
+    if x_adjust_left == nil then
+        gui.text(x - 20, y, str)
+    else
+        gui.text(x - x_adjust_left, y, str)
+    end
+    if memory.readbyte(charge_move) ~= 0xFF then
         gui.drawbox(x, y, x + 42, y + assistHaba, 0x00000000, 0x000000FF)
-        gui.drawbox(x, y, x + (memory.readbyte(address_charge)), y + assistHaba, 0x0080FFFF, 0x000000FF)
+        gui.drawbox(x, y, x + (memory.readbyte(charge_move)), y + assistHaba, 0x0080FFFF, 0x000000FF)
     else
         gui.drawbox(x, y, x + 42, y + assistHaba, 0x00000000, 0xFEFEFEFF)
     end
@@ -80,6 +84,34 @@ function alexGauges()
         if memory.readbyte(0x020154D3) == 0 then -- SA1 Hyper Bomb
             kaitenGauge("4268P", offsetX, offsetY, 0x0202590F, 0x020258F7, 20)
         end
+    end
+end
+
+function chunGauges()
+    offsetX = 170
+    offsetY = 160
+    if lightningLegsView == 1 then
+        gui.text(offsetX, offsetY, "LK legs" .. " : " .. memory.readbyte(0x02025A03))
+        offsetY = offsetY + offsetLightningLegsGauge
+        gui.text(offsetX, offsetY, "MK legs" .. " : " .. memory.readbyte(0x02025A05))
+        offsetY = offsetY + offsetLightningLegsGauge
+        gui.text(offsetX, offsetY, "HK legs" .. " : " .. memory.readbyte(0x02025A07))
+        offsetY = offsetY + offsetLightningLegsGauge
+        gui.text(offsetX - 20, offsetY, "Legs")
+        offsetY = offsetY + 1
+        if memory.readbyte(0x02025A2D) ~= 0xFF then
+            gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + lightningLegsWidth, 0x00000000, 0x000000FF)
+            gui.drawbox(offsetX, offsetY, offsetX + ((memory.readbyte(0x020259f3) / 2)),
+                offsetY + lightningLegsWidth,
+                0xFF8080FF,
+                0x000000FF)
+        else
+            gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + lightningLegsWidth, 0x00000000, 0xFEFEFEFF)
+        end
+        offsetY = offsetY + offsetLightningLegsGauge
+    end
+    if chargeView == 1 then
+        chargeGauge("S.Bird", offsetX, offsetY, 0x020259D9, 0x020259D7, 28)
     end
 end
 
@@ -235,7 +267,77 @@ function ryuGauges()
     end
 end
 
+function oroGauges()
+    offsetX = 180
+    offsetY = 180
+    if chargeView == 1 then
+        chargeGauge("Fireball", offsetX, offsetY, 0x02025A11, 0x02025A0F, 34)
+        offsetY = offsetY + offsetChargeGauge
+        chargeGauge("Oni Yanma", offsetX, offsetY, 0x020259D9, 0x020259D7, 38)
+    end
+end
+
+function urienGauges()
+    offsetX = 180
+    offsetY = 180
+    if chargeView == 1 then
+        chargeGauge("Tackle", offsetX, offsetY, 0x020259D9, 0x020259D7, 35)
+        offsetY = offsetY + offsetChargeGauge
+        chargeGauge("Headbutt", offsetX, offsetY, 0x02025A2D, 0x02025A2B, 35)
+        offsetY = offsetY + offsetChargeGauge
+        chargeGauge("Kneedrop", offsetX, offsetY, 0x020259F5, 0x020259F3, 35)
+    end
+end
+
+function qGauges()
+    offsetX = 180
+    offsetY = 180
+    if chargeView == 1 then
+        chargeGauge("Charge Punch", offsetX, offsetY, 0x020259D9, 0x020259D7, 50)
+        offsetY = offsetY + offsetChargeGauge
+        chargeGauge("Low Charge Punch", offsetX, offsetY, 0x020259F5, 0x020259F3, 66)
+    end
+end
+
+function remyGauges()
+    offsetX = 180
+    offsetY = 180
+    if chargeView == 1 then
+        chargeGauge("S.Boom High", offsetX, offsetY, 0x020259F5, 0x020259F3, 47)
+        offsetY = offsetY + offsetChargeGauge
+        chargeGauge("S.Boom Low", offsetX, offsetY, 0x02025A11, 0x02025A0F, 44)
+        offsetY = offsetY + offsetChargeGauge
+        chargeGauge("Flashkick", offsetX, offsetY, 0x020259D9, 0x020259D7, 40)
+    end
+end
+
+-- Main function
+
 function assistMode()
+    -- Relevant characters
+    alex_is_selected = memory.readbyte(0x2011387) == 0x01
+    chun_is_selected = memory.readbyte(0x2011387) == 0x10
+    hugo_is_selected = memory.readbyte(0x2011387) == 0x06
+    ryu_is_selected = memory.readbyte(0x2011387) == 0x02
+    oro_is_selected = memory.readbyte(0x2011387) == 0x09
+    q_is_selected = memory.readbyte(0x2011387) == 0x12
+    remy_is_selected = memory.readbyte(0x2011387) == 0x14
+    urien_is_selected = memory.readbyte(0x2011387) == 0x0D
+
+    -- Irrelevant characters
+    elena_is_selcted = memory.readbyte(0x2011387) == 0x08
+    dudley_is_selected = memory.readbyte(0x2011387) == 0x04
+    gouki_is_selected = memory.readbyte(0x2011387) == 0x0E
+    ibuki_is_selcted = memory.readbyte(0x2011387) == 0x07
+    ken_is_selected = memory.readbyte(0x2011387) == 0x0B
+    makoto_is_selected = memory.readbyte(0x2011387) == 0x11
+    necro_is_selected = memory.readbyte(0x2011387) == 0x05
+    sean_is_selected = memory.readbyte(0x2011387) == 0x0C
+    shin_gouki_is_selected = memory.readbyte(0x2011387) == 0x0F
+    twelve_is_selected = memory.readbyte(0x2011387) == 0x13
+    yun_is_selected = memory.readbyte(0x2011387) == 0x03
+    yang_is_selected = memory.readbyte(0x2011387) == 0x0A
+
     -- Helper vars
     assistHaba = 2
     chargeView = 1
@@ -253,118 +355,47 @@ function assistMode()
     denjinHaba = 4
     lightningLegsWidth = 4
 
-    -- Alex trigger
-    if memory.readbyte(0x2011387) == 0x01 then
+    -- Relevant character is seleceted
+    if alex_is_selected then
         alexGauges()
     end
-    -- Ryu trigger
-    if memory.readbyte(0x2011387) == 0x02 then
+    if ryu_is_selected then
         ryuGauges()
     end
-
-    -- ???
-    if memory.readbyte(0x2011387) == 0x03 then
-    end
-    if memory.readbyte(0x2011387) == 0x04 then
-    end
-    if memory.readbyte(0x2011387) == 0x05 then
-    end
-    if memory.readbyte(0x2011387) == 0x07 then
-    end
-    if memory.readbyte(0x2011387) == 0x08 then
-    end
-    if memory.readbyte(0x2011387) == 0x0A then
-    end
-    if memory.readbyte(0x2011387) == 0x0B then
-    end
-    if memory.readbyte(0x2011387) == 0x0C then
-    end
-    --???
-
-    -- Hugo trigger
-    if memory.readbyte(0x2011387) == 0x06 then
+    if hugo_is_selected then
         hugoGauges()
     end
-
-    -- Charge Mode for ??? trigger
-    if memory.readbyte(0x2011387) == 0x09 then
-        offsetX = 180
-        offsetY = 180
-        if chargeView == 1 then
-            chargeGauge("4-6P", offsetX, offsetY, 0x02025A11, 0x02025A0F)
-            offsetY = offsetY + offsetChargeGauge
-            chargeGauge("2-8P", offsetX, offsetY, 0x020259D9, 0x020259D7)
-        end
+    if chun_is_selected then
+        chunGauges()
+    end
+    if oro_is_selected then
+        oroGauges()
+    end
+    if urien_is_selected then
+        urienGauges()
+    end
+    if q_is_selected then
+        qGauges()
+    end
+    if remy_is_selected then
+        remyGauges()
     end
 
-    -- Charge Mode for ??? trigger
-    if memory.readbyte(0x2011387) == 0x0D then
-        offsetX = 180
-        offsetY = 180
-        if chargeView == 1 then
-            chargeGauge("4-6K", offsetX, offsetY, 0x020259D9, 0x020259D7)
-            offsetY = offsetY + offsetChargeGauge
-            chargeGauge("2-8P", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
-            offsetY = offsetY + offsetChargeGauge
-            chargeGauge("2-8K", offsetX, offsetY, 0x020259F5, 0x020259F3)
-        end
-    end
-    if memory.readbyte(0x2011387) == 0x0E then
-    end
-    if memory.readbyte(0x2011387) == 0x0F then
-    end
-    -- Lightning Legs Mode trigger
-    if memory.readbyte(0x2011387) == 0x10 then
-        offsetX = 170
-        offsetY = 160
-        if lightningLegsView == 1 then
-            gui.text(offsetX, offsetY, "LK legs" .. " : " .. memory.readbyte(0x02025A03))
-            offsetY = offsetY + offsetLightningLegsGauge
-            gui.text(offsetX, offsetY, "MK legs" .. " : " .. memory.readbyte(0x02025A05))
-            offsetY = offsetY + offsetLightningLegsGauge
-            gui.text(offsetX, offsetY, "HK legs" .. " : " .. memory.readbyte(0x02025A07))
-            offsetY = offsetY + offsetLightningLegsGauge
-            gui.text(offsetX - 20, offsetY, "Legs")
-            offsetY = offsetY + 1
-            if memory.readbyte(0x02025A2D) ~= 0xFF then
-                gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + lightningLegsWidth, 0x00000000, 0x000000FF)
-                gui.drawbox(offsetX, offsetY, offsetX + ((memory.readbyte(0x020259f3) / 2)),
-                    offsetY + lightningLegsWidth,
-                    0xFF8080FF,
-                    0x000000FF)
-            else
-                gui.drawbox(offsetX, offsetY, offsetX + 49, offsetY + lightningLegsWidth, 0x00000000, 0xFEFEFEFF)
-            end
-            offsetY = offsetY + offsetLightningLegsGauge
-        end
-        if chargeView == 1 then
-            chargeGauge("2-8K", offsetX, offsetY, 0x020259D9, 0x020259D7)
-        end
-    end
-    if memory.readbyte(0x2011387) == 0x11 then
-    end
-    -- Charge Mode for ??? trigger
-    if memory.readbyte(0x2011387) == 0x12 then
-        offsetX = 180
-        offsetY = 180
-        if chargeView == 1 then
-            chargeGauge("4-6P", offsetX, offsetY, 0x020259D9, 0x020259D7)
-            offsetY = offsetY + offsetChargeGauge
-            chargeGauge("4-6K", offsetX, offsetY, 0x020259F5, 0x020259F3)
-        end
-    end
-    if memory.readbyte(0x2011387) == 0x13 then
-    end
-    -- Charge Mode for ??? trigger
-    if memory.readbyte(0x2011387) == 0x14 then
-        offsetX = 180
-        offsetY = 180
-        if chargeView == 1 then
-            chargeGauge("4-6P", offsetX, offsetY, 0x020259F5, 0x020259F3)
-            offsetY = offsetY + offsetChargeGauge
-            chargeGauge("4-6K", offsetX, offsetY, 0x02025A11, 0x02025A0F)
-            offsetY = offsetY + offsetChargeGauge
-            chargeGauge("2-8K", offsetX, offsetY, 0x020259D9, 0x020259D7)
-        end
+    -- Irrelevant character is seleceted
+    if
+        elena_is_selcted
+        or dudley_is_selected
+        or gouki_is_selected
+        or ibuki_is_selcted
+        or ken_is_selected
+        or makoto_is_selected
+        or necro_is_selected
+        or twelve_is_selected
+        or sean_is_selected
+        or shin_gouki_is_selected
+        or yun_is_selected
+        or yang_is_selected
+    then
+        -- Nohting happens!
     end
 end
