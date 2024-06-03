@@ -7,6 +7,31 @@ function bitReturn(value, bitnum)
     return re
 end
 
+function returnSelectedCharacters()
+    -- Relevant characters
+    alex_is_selected = memory.readbyte(0x2011387) == 0x01
+    chun_is_selected = memory.readbyte(0x2011387) == 0x10
+    hugo_is_selected = memory.readbyte(0x2011387) == 0x06
+    ryu_is_selected = memory.readbyte(0x2011387) == 0x02
+    oro_is_selected = memory.readbyte(0x2011387) == 0x09
+    q_is_selected = memory.readbyte(0x2011387) == 0x12
+    remy_is_selected = memory.readbyte(0x2011387) == 0x14
+    urien_is_selected = memory.readbyte(0x2011387) == 0x0D
+    -- Irrelevant characters
+    elena_is_selcted = memory.readbyte(0x2011387) == 0x08
+    dudley_is_selected = memory.readbyte(0x2011387) == 0x04
+    gouki_is_selected = memory.readbyte(0x2011387) == 0x0E
+    ibuki_is_selcted = memory.readbyte(0x2011387) == 0x07
+    ken_is_selected = memory.readbyte(0x2011387) == 0x0B
+    makoto_is_selected = memory.readbyte(0x2011387) == 0x11
+    necro_is_selected = memory.readbyte(0x2011387) == 0x05
+    sean_is_selected = memory.readbyte(0x2011387) == 0x0C
+    shin_gouki_is_selected = memory.readbyte(0x2011387) == 0x0F
+    twelve_is_selected = memory.readbyte(0x2011387) == 0x13
+    yun_is_selected = memory.readbyte(0x2011387) == 0x03
+    yang_is_selected = memory.readbyte(0x2011387) == 0x0A
+end
+
 function chargeGauge(str, x, y, charge_move, address_timer, x_adjust_left)
     if x_adjust_left == nil then
         gui.text(x - 20, y, str)
@@ -28,8 +53,12 @@ function chargeGauge(str, x, y, charge_move, address_timer, x_adjust_left)
     end
 end
 
-function kaitenGauge(str, x, y, address_juji, address_timer, timerOffset)
-    gui.text(x - 24, y, str)
+function kaitenGauge(str, x, y, address_juji, address_timer, timerOffset, x_adjust_left)
+    if x_adjust_left == nil then
+        gui.text(x - 24, y, str)
+    else
+        gui.text(x - x_adjust_left, y, str)
+    end
     juji_up = bitReturn(memory.readbyte(address_juji), 0)
     juji_down = bitReturn(memory.readbyte(address_juji), 1)
     juji_right = bitReturn(memory.readbyte(address_juji), 2)
@@ -75,14 +104,14 @@ function alexGauges()
     offsetX = 180
     offsetY = 180
     if chargeView == 1 then
-        chargeGauge("4-6K", offsetX, offsetY, 0x02025A49, 0x02025A47)
+        chargeGauge("Elbow", offsetX, offsetY, 0x02025A49, 0x02025A47, 22)
         offsetY = offsetY + offsetChargeGauge
-        chargeGauge("2-8K", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
+        chargeGauge("Stomp", offsetX, offsetY, 0x02025A2D, 0x02025A2B, 22)
         offsetY = offsetY + offsetChargeGauge
     end
     if kaitenView == 1 then
         if memory.readbyte(0x020154D3) == 0 then -- SA1 Hyper Bomb
-            kaitenGauge("4268P", offsetX, offsetY, 0x0202590F, 0x020258F7, 20)
+            kaitenGauge("Hyper Bomb", offsetX, offsetY, 0x0202590F, 0x020258F7, 20, 45)
         end
     end
 end
@@ -119,18 +148,18 @@ function hugoGauges()
     offsetX = 174
     offsetY = 160
     if kaitenView == 1 then
-        kaitenGauge("4268P", offsetX, offsetY, 0x020259EF, 0x020259D7, 40)
+        kaitenGauge("360+P", offsetX, offsetY, 0x020259EF, 0x020259D7, 40)
         offsetY = offsetY + offsetKaitenGauge
-        kaitenGauge("4268K", offsetX, offsetY, 0x02025A0B, 0x020259F3, 40)
+        kaitenGauge("360+K", offsetX, offsetY, 0x02025A0B, 0x020259F3, 40)
         offsetY = offsetY + offsetKaitenGauge
-        if memory.readbyte(0x020154D3) == 0 then
+        if memory.readbyte(0x020154D3) == 0 then -- SA1 Gigas
             juji_up = bitReturn(memory.readbyte(0x0202590F), 0);
             juji_down = bitReturn(memory.readbyte(0x0202590F), 1);
             juji_right = bitReturn(memory.readbyte(0x0202590F), 2);
             juji_left = bitReturn(memory.readbyte(0x0202590F), 3);
             x = offsetX
             y = offsetY
-            gui.text(x - 46, y, "42684268P")
+            gui.text(x - 24, y, "Gigas")
             if memory.readbyte(0x020258FF) == 48 then
                 jujiHaba = 6
                 if juji_up == 1 then
@@ -314,29 +343,8 @@ end
 -- Main function
 
 function assistMode()
-    -- Relevant characters
-    alex_is_selected = memory.readbyte(0x2011387) == 0x01
-    chun_is_selected = memory.readbyte(0x2011387) == 0x10
-    hugo_is_selected = memory.readbyte(0x2011387) == 0x06
-    ryu_is_selected = memory.readbyte(0x2011387) == 0x02
-    oro_is_selected = memory.readbyte(0x2011387) == 0x09
-    q_is_selected = memory.readbyte(0x2011387) == 0x12
-    remy_is_selected = memory.readbyte(0x2011387) == 0x14
-    urien_is_selected = memory.readbyte(0x2011387) == 0x0D
-
-    -- Irrelevant characters
-    elena_is_selcted = memory.readbyte(0x2011387) == 0x08
-    dudley_is_selected = memory.readbyte(0x2011387) == 0x04
-    gouki_is_selected = memory.readbyte(0x2011387) == 0x0E
-    ibuki_is_selcted = memory.readbyte(0x2011387) == 0x07
-    ken_is_selected = memory.readbyte(0x2011387) == 0x0B
-    makoto_is_selected = memory.readbyte(0x2011387) == 0x11
-    necro_is_selected = memory.readbyte(0x2011387) == 0x05
-    sean_is_selected = memory.readbyte(0x2011387) == 0x0C
-    shin_gouki_is_selected = memory.readbyte(0x2011387) == 0x0F
-    twelve_is_selected = memory.readbyte(0x2011387) == 0x13
-    yun_is_selected = memory.readbyte(0x2011387) == 0x03
-    yang_is_selected = memory.readbyte(0x2011387) == 0x0A
+    -- Determines what character is selected (P1)
+    returnSelectedCharacters()
 
     -- Helper vars
     assistHaba = 2
