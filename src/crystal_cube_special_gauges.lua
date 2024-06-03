@@ -21,7 +21,7 @@ function returnSelectedCharacters()
     elena_is_selcted = memory.readbyte(0x2011387) == 0x08
     dudley_is_selected = memory.readbyte(0x2011387) == 0x04
     gouki_is_selected = memory.readbyte(0x2011387) == 0x0E
-    ibuki_is_selcted = memory.readbyte(0x2011387) == 0x07
+    ibuki_is_selected = memory.readbyte(0x2011387) == 0x07
     ken_is_selected = memory.readbyte(0x2011387) == 0x0B
     makoto_is_selected = memory.readbyte(0x2011387) == 0x11
     necro_is_selected = memory.readbyte(0x2011387) == 0x05
@@ -226,9 +226,10 @@ function ryuGauges()
     offsetX = 170
     offsetY = 190
     if denjinView == 1 then
-        if memory.readbyte(0x020154D3) == 2 then
+        if memory.readbyte(0x020154D3) == 2 then -- SA3 Denjin is selected
+            gui.text(50, 50, "Denjin?")
             barColor = 0x00000000
-            if dashiteruWaza == "S00280028"
+            if dashiteruWaza == "S00280028" -- Wtf is this
                 or dashiteruWaza == "N0028000d"
                 or dashiteruWaza == "N00280013"
                 or dashiteruWaza == "N00280014"
@@ -290,7 +291,7 @@ function ryuGauges()
             gui.drawbox(offsetX, offsetY, offsetX + 48, offsetY + denjinHaba, 0x00000000, 0x000000FF)
             gui.drawbox(offsetX, offsetY, offsetX + 80, offsetY + denjinHaba, 0x00000000, 0x000000FF)
             gui.drawbox(offsetX, offsetY, offsetX + denjinTimer, offsetY + denjinHaba, barColor, 0x000000FF)
-            if memory.readbyte(0x02068D27) ~= 0 then
+            if denjinTimer ~= 0 then
             end
         end
     end
@@ -391,10 +392,10 @@ function assistMode()
 
     -- Irrelevant character is seleceted
     if
-        elena_is_selcted
+        elena_is_selected
         or dudley_is_selected
         or gouki_is_selected
-        or ibuki_is_selcted
+        or ibuki_is_selected
         or ken_is_selected
         or makoto_is_selected
         or necro_is_selected
