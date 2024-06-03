@@ -24,7 +24,7 @@ function chargeGauge(str, x, y, address_charge, address_timer)
     end
 end
 
-function kaiten(str, x, y, address_juji, address_timer, timerOffset)
+function kaitenGauge(str, x, y, address_juji, address_timer, timerOffset)
     gui.text(x - 24, y, str)
     juji_up = bitReturn(memory.readbyte(address_juji), 0)
     juji_down = bitReturn(memory.readbyte(address_juji), 1)
@@ -65,6 +65,176 @@ function numSpaceLeft(val, keta)
     return temp
 end
 
+-- Character specific functions
+
+function alexGauges()
+    offsetX = 180
+    offsetY = 180
+    if chargeView == 1 then
+        chargeGauge("4-6K", offsetX, offsetY, 0x02025A49, 0x02025A47)
+        offsetY = offsetY + offsetChargeGauge
+        chargeGauge("2-8K", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
+        offsetY = offsetY + offsetChargeGauge
+    end
+    if kaitenView == 1 then
+        if memory.readbyte(0x020154D3) == 0 then -- SA1 Hyper Bomb
+            kaitenGauge("4268P", offsetX, offsetY, 0x0202590F, 0x020258F7, 20)
+        end
+    end
+end
+
+function hugoGauges()
+    offsetX = 174
+    offsetY = 160
+    if kaitenView == 1 then
+        kaitenGauge("4268P", offsetX, offsetY, 0x020259EF, 0x020259D7, 40)
+        offsetY = offsetY + offsetKaitenGauge
+        kaitenGauge("4268K", offsetX, offsetY, 0x02025A0B, 0x020259F3, 40)
+        offsetY = offsetY + offsetKaitenGauge
+        if memory.readbyte(0x020154D3) == 0 then
+            juji_up = bitReturn(memory.readbyte(0x0202590F), 0);
+            juji_down = bitReturn(memory.readbyte(0x0202590F), 1);
+            juji_right = bitReturn(memory.readbyte(0x0202590F), 2);
+            juji_left = bitReturn(memory.readbyte(0x0202590F), 3);
+            x = offsetX
+            y = offsetY
+            gui.text(x - 46, y, "42684268P")
+            if memory.readbyte(0x020258FF) == 48 then
+                jujiHaba = 6
+                if juji_up == 1 then
+                    gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFF0000FF)
+                else
+                    gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFFFFFFFF)
+                end
+                if juji_down == 1 then
+                    gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFF0000FF)
+                else
+                    gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFFFFFFFF)
+                end
+                if juji_right == 1 then
+                    gui.text(x + jujiHaba * 2, y, "6", 0xFF0000FF)
+                else
+                    gui.text(x + jujiHaba * 2, y, "6", 0xFFFFFFFF)
+                end
+                if juji_left == 1 then
+                    gui.text(x, y, "4", 0xFF0000FF)
+                else
+                    gui.text(x, y, "4", 0xFFFFFFFF)
+                end
+                x = x + 20
+                gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFFFFFFFF)
+                gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFFFFFFFF)
+                gui.text(x + jujiHaba * 2, y, "6", 0xFFFFFFFF)
+                gui.text(x, y, "4", 0xFFFFFFFF)
+            else
+                jujiHaba = 6
+                gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFF0000FF)
+                gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFF0000FF)
+                gui.text(x + jujiHaba * 2, y, "6", 0xFF0000FF)
+                gui.text(x, y, "4", 0xFF0000FF)
+                x = x + 20
+                if juji_up == 1 then
+                    gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFF0000FF)
+                else
+                    gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFFFFFFFF)
+                end
+                if juji_down == 1 then
+                    gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFF0000FF)
+                else
+                    gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFFFFFFFF)
+                end
+                if juji_right == 1 then
+                    gui.text(x + jujiHaba * 2, y, "6", 0xFF0000FF)
+                else
+                    gui.text(x + jujiHaba * 2, y, "6", 0xFFFFFFFF)
+                end
+                if juji_left == 1 then
+                    gui.text(x, y, "4", 0xFF0000FF)
+                else
+                    gui.text(x, y, "4", 0xFFFFFFFF)
+                end
+            end
+            x = x + 20
+            gui.drawbox(x, y, x + 32, y + 4, 0x00000000, 0x000000FF)
+            gui.drawbox(x, y, x + (memory.readbyte(0x020258F7)), y + 4, 0x00C080FF, 0x000000FF)
+        end
+    end
+end
+
+function ryuGauges()
+    offsetX = 170
+    offsetY = 190
+    if denjinView == 1 then
+        if memory.readbyte(0x020154D3) == 2 then
+            barColor = 0x00000000
+            if dashiteruWaza == "S00280028"
+                or dashiteruWaza == "N0028000d"
+                or dashiteruWaza == "N00280013"
+                or dashiteruWaza == "N00280014"
+                or dashiteruWaza == "N00280015"
+                or dashiteruWaza == "N00280016"
+                or dashiteruWaza == "N00280017"
+                or dashiteruWaza == "S00290028"
+                or dashiteruWaza == "N0029000d"
+                or dashiteruWaza == "N00290013"
+                or dashiteruWaza == "N00290014"
+                or dashiteruWaza == "N00290015"
+                or dashiteruWaza == "N00290016"
+                or dashiteruWaza == "N00290017"
+                or dashiteruWaza == "S002a0028"
+                or dashiteruWaza == "N002a000d"
+                or dashiteruWaza == "N002a0013"
+                or dashiteruWaza == "N002a0014"
+                or dashiteruWaza == "N002a0015"
+                or dashiteruWaza == "N002a0016"
+                or dashiteruWaza == "N002a0017"
+            then
+                denjinTimer = memory.readbyte(0x02068D27)
+                denjin = memory.readbyte(0x02068D2D)
+                if denjin == 3 then
+                    denjinLv = 1
+                    barColor = 0x0080FFFF
+                elseif denjin == 9 then
+                    denjinLv = 2
+                    barColor = 0x00FFFFFF
+                elseif denjin == 14 then
+                    denjinLv = 3
+                    barColor = 0x80FFFFFF
+                elseif denjin == 19 then
+                    denjinLv = 4
+                    barColor = 0xFEFEFEFF
+                    if denjinTimer == 0 then
+                        denjinLv = 5
+                    end
+                end
+            else
+                if dashiteruWaza == "S00200020" or dashiteruWaza == "S00210021" or dashiteruWaza == "S00220022" or dashiteruWaza == "S00230023"
+                    or dashiteruWaza == "S00340034" or dashiteruWaza == "S00350035" or dashiteruWaza == "S00360036" or dashiteruWaza == "S00370037"
+                then
+
+                else
+                    denjinTimer = 0
+                    memory.writebyte(0x02068D27, 0x00)
+                    denjinLv = 0
+                    memory.writebyte(0x02068D2D, 0x00)
+                end
+            end
+            if dashiteruWaza == "N0028000d" or dashiteruWaza == "N0029000d" or dashiteruWaza == "N002a000d" then
+            end
+            gui.text(offsetX - 10, offsetY, numSpaceLeft(denjinTimer, 2))
+            gui.text(offsetX - 38, offsetY, "LV_" .. denjinLv)
+            offsetY = offsetY + 1
+            gui.drawbox(offsetX, offsetY, offsetX + 8, offsetY + denjinHaba, 0x00000000, 0x000000FF)
+            gui.drawbox(offsetX, offsetY, offsetX + 24, offsetY + denjinHaba, 0x00000000, 0x000000FF)
+            gui.drawbox(offsetX, offsetY, offsetX + 48, offsetY + denjinHaba, 0x00000000, 0x000000FF)
+            gui.drawbox(offsetX, offsetY, offsetX + 80, offsetY + denjinHaba, 0x00000000, 0x000000FF)
+            gui.drawbox(offsetX, offsetY, offsetX + denjinTimer, offsetY + denjinHaba, barColor, 0x000000FF)
+            if memory.readbyte(0x02068D27) ~= 0 then
+            end
+        end
+    end
+end
+
 function assistMode()
     -- Helper vars
     assistHaba = 2
@@ -83,185 +253,40 @@ function assistMode()
     denjinHaba = 4
     lightningLegsWidth = 4
 
-    --Charge Gauge for ??? trigger
+    -- Alex trigger
     if memory.readbyte(0x2011387) == 0x01 then
-        offsetX = 180
-        offsetY = 180
-        if chargeView == 1 then
-            chargeGauge("4-6K", offsetX, offsetY, 0x02025A49, 0x02025A47)
-            offsetY = offsetY + offsetChargeGauge
-            chargeGauge("2-8K", offsetX, offsetY, 0x02025A2D, 0x02025A2B)
-            offsetY = offsetY + offsetChargeGauge
-        end
-        if kaitenView == 1 then
-            if memory.readbyte(0x020154D3) == 0 then
-                kaiten("4268P", offsetX, offsetY, 0x0202590F, 0x020258F7, 20)
-            end
-        end
+        alexGauges()
     end
-    -- Denjin Mode trigger
+    -- Ryu trigger
     if memory.readbyte(0x2011387) == 0x02 then
-        offsetX = 170
-        offsetY = 190
-        if denjinView == 1 then
-            if memory.readbyte(0x020154D3) == 2 then
-                barColor = 0x00000000
-                if dashiteruWaza == "S00280028"
-                    or dashiteruWaza == "N0028000d"
-                    or dashiteruWaza == "N00280013"
-                    or dashiteruWaza == "N00280014"
-                    or dashiteruWaza == "N00280015"
-                    or dashiteruWaza == "N00280016"
-                    or dashiteruWaza == "N00280017"
-                    or dashiteruWaza == "S00290028"
-                    or dashiteruWaza == "N0029000d"
-                    or dashiteruWaza == "N00290013"
-                    or dashiteruWaza == "N00290014"
-                    or dashiteruWaza == "N00290015"
-                    or dashiteruWaza == "N00290016"
-                    or dashiteruWaza == "N00290017"
-                    or dashiteruWaza == "S002a0028"
-                    or dashiteruWaza == "N002a000d"
-                    or dashiteruWaza == "N002a0013"
-                    or dashiteruWaza == "N002a0014"
-                    or dashiteruWaza == "N002a0015"
-                    or dashiteruWaza == "N002a0016"
-                    or dashiteruWaza == "N002a0017"
-                then
-                    denjinTimer = memory.readbyte(0x02068D27)
-                    denjin = memory.readbyte(0x02068D2D)
-                    if denjin == 3 then
-                        denjinLv = 1
-                        barColor = 0x0080FFFF
-                    elseif denjin == 9 then
-                        denjinLv = 2
-                        barColor = 0x00FFFFFF
-                    elseif denjin == 14 then
-                        denjinLv = 3
-                        barColor = 0x80FFFFFF
-                    elseif denjin == 19 then
-                        denjinLv = 4
-                        barColor = 0xFEFEFEFF
-                        if denjinTimer == 0 then
-                            denjinLv = 5
-                        end
-                    end
-                else
-                    if dashiteruWaza == "S00200020" or dashiteruWaza == "S00210021" or dashiteruWaza == "S00220022" or dashiteruWaza == "S00230023"
-                        or dashiteruWaza == "S00340034" or dashiteruWaza == "S00350035" or dashiteruWaza == "S00360036" or dashiteruWaza == "S00370037"
-                    then
-
-                    else
-                        denjinTimer = 0
-                        memory.writebyte(0x02068D27, 0x00)
-                        denjinLv = 0
-                        memory.writebyte(0x02068D2D, 0x00)
-                    end
-                end
-                if dashiteruWaza == "N0028000d" or dashiteruWaza == "N0029000d" or dashiteruWaza == "N002a000d" then
-                end
-                gui.text(offsetX - 10, offsetY, numSpaceLeft(denjinTimer, 2))
-                gui.text(offsetX - 38, offsetY, "LV_" .. denjinLv)
-                offsetY = offsetY + 1
-                gui.drawbox(offsetX, offsetY, offsetX + 8, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-                gui.drawbox(offsetX, offsetY, offsetX + 24, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-                gui.drawbox(offsetX, offsetY, offsetX + 48, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-                gui.drawbox(offsetX, offsetY, offsetX + 80, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-                gui.drawbox(offsetX, offsetY, offsetX + denjinTimer, offsetY + denjinHaba, barColor, 0x000000FF)
-                if memory.readbyte(0x02068D27) ~= 0 then
-                end
-            end
-        end
+        ryuGauges()
     end
+
+    -- ???
     if memory.readbyte(0x2011387) == 0x03 then
     end
     if memory.readbyte(0x2011387) == 0x04 then
     end
     if memory.readbyte(0x2011387) == 0x05 then
     end
-    -- Kaiten Mode trigger
-    if memory.readbyte(0x2011387) == 0x06 then
-        offsetX = 174
-        offsetY = 160
-        if kaitenView == 1 then
-            kaiten("4268P", offsetX, offsetY, 0x020259EF, 0x020259D7, 40)
-            offsetY = offsetY + offsetKaitenGauge
-            kaiten("4268K", offsetX, offsetY, 0x02025A0B, 0x020259F3, 40)
-            offsetY = offsetY + offsetKaitenGauge
-            if memory.readbyte(0x020154D3) == 0 then
-                juji_up = bitReturn(memory.readbyte(0x0202590F), 0);
-                juji_down = bitReturn(memory.readbyte(0x0202590F), 1);
-                juji_right = bitReturn(memory.readbyte(0x0202590F), 2);
-                juji_left = bitReturn(memory.readbyte(0x0202590F), 3);
-                x = offsetX
-                y = offsetY
-                gui.text(x - 46, y, "42684268P")
-                if memory.readbyte(0x020258FF) == 48 then
-                    jujiHaba = 6
-                    if juji_up == 1 then
-                        gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFF0000FF)
-                    else
-                        gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFFFFFFFF)
-                    end
-                    if juji_down == 1 then
-                        gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFF0000FF)
-                    else
-                        gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFFFFFFFF)
-                    end
-                    if juji_right == 1 then
-                        gui.text(x + jujiHaba * 2, y, "6", 0xFF0000FF)
-                    else
-                        gui.text(x + jujiHaba * 2, y, "6", 0xFFFFFFFF)
-                    end
-                    if juji_left == 1 then
-                        gui.text(x, y, "4", 0xFF0000FF)
-                    else
-                        gui.text(x, y, "4", 0xFFFFFFFF)
-                    end
-                    x = x + 20
-                    gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFFFFFFFF)
-                    gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFFFFFFFF)
-                    gui.text(x + jujiHaba * 2, y, "6", 0xFFFFFFFF)
-                    gui.text(x, y, "4", 0xFFFFFFFF)
-                else
-                    jujiHaba = 6
-                    gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFF0000FF)
-                    gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFF0000FF)
-                    gui.text(x + jujiHaba * 2, y, "6", 0xFF0000FF)
-                    gui.text(x, y, "4", 0xFF0000FF)
-                    x = x + 20
-                    if juji_up == 1 then
-                        gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFF0000FF)
-                    else
-                        gui.text(x + jujiHaba, y - jujiHaba / 2, "8", 0xFFFFFFFF)
-                    end
-                    if juji_down == 1 then
-                        gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFF0000FF)
-                    else
-                        gui.text(x + jujiHaba, y + jujiHaba / 2, "2", 0xFFFFFFFF)
-                    end
-                    if juji_right == 1 then
-                        gui.text(x + jujiHaba * 2, y, "6", 0xFF0000FF)
-                    else
-                        gui.text(x + jujiHaba * 2, y, "6", 0xFFFFFFFF)
-                    end
-                    if juji_left == 1 then
-                        gui.text(x, y, "4", 0xFF0000FF)
-                    else
-                        gui.text(x, y, "4", 0xFFFFFFFF)
-                    end
-                end
-                x = x + 20
-                gui.drawbox(x, y, x + 32, y + 4, 0x00000000, 0x000000FF)
-                gui.drawbox(x, y, x + (memory.readbyte(0x020258F7)), y + 4, 0x00C080FF, 0x000000FF)
-            end
-        end
-    end
     if memory.readbyte(0x2011387) == 0x07 then
     end
     if memory.readbyte(0x2011387) == 0x08 then
     end
-    --Charge mode for ??? trigger
+    if memory.readbyte(0x2011387) == 0x0A then
+    end
+    if memory.readbyte(0x2011387) == 0x0B then
+    end
+    if memory.readbyte(0x2011387) == 0x0C then
+    end
+    --???
+
+    -- Hugo trigger
+    if memory.readbyte(0x2011387) == 0x06 then
+        hugoGauges()
+    end
+
+    -- Charge Mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x09 then
         offsetX = 180
         offsetY = 180
@@ -271,13 +296,8 @@ function assistMode()
             chargeGauge("2-8P", offsetX, offsetY, 0x020259D9, 0x020259D7)
         end
     end
-    if memory.readbyte(0x2011387) == 0x0A then
-    end
-    if memory.readbyte(0x2011387) == 0x0B then
-    end
-    if memory.readbyte(0x2011387) == 0x0C then
-    end
-    --Charge mode for ??? trigger
+
+    -- Charge Mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x0D then
         offsetX = 180
         offsetY = 180
@@ -323,7 +343,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x11 then
     end
-    -- Charge mode for ??? trigger
+    -- Charge Mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x12 then
         offsetX = 180
         offsetY = 180
@@ -335,7 +355,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x13 then
     end
-    -- Charge mode for ??? trigger
+    -- Charge Mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x14 then
         offsetX = 180
         offsetY = 180
