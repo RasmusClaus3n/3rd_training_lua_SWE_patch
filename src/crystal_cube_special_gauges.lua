@@ -225,11 +225,11 @@ end
 function ryuGauges()
     offsetX = 170
     offsetY = 190
+	dashiteruCall() --FUNCTION TO CALL VALUE OF DASHITERUWAZA
     if denjinView == 1 then
-        if memory.readbyte(0x020154D3) == 2 then -- SA3 Denjin is selected
-            gui.text(50, 50, "Denjin?")
+        if memory.readbyte(0x020154D3) == 2 then --SA3 Denjin
             barColor = 0x00000000
-            if dashiteruWaza == "S00280028" -- Wtf is this
+            if dashiteruWaza == "S00280028"
                 or dashiteruWaza == "N0028000d"
                 or dashiteruWaza == "N00280013"
                 or dashiteruWaza == "N00280014"
@@ -251,6 +251,7 @@ function ryuGauges()
                 or dashiteruWaza == "N002a0016"
                 or dashiteruWaza == "N002a0017"
             then
+			
                 denjinTimer = memory.readbyte(0x02068D27)
                 denjin = memory.readbyte(0x02068D2D)
                 if denjin == 3 then
@@ -270,9 +271,9 @@ function ryuGauges()
                     end
                 end
             else
-                if dashiteruWaza == "S00200020" or dashiteruWaza == "S00210021" or dashiteruWaza == "S00220022" or dashiteruWaza == "S00230023"
-                    or dashiteruWaza == "S00340034" or dashiteruWaza == "S00350035" or dashiteruWaza == "S00360036" or dashiteruWaza == "S00370037"
-                then
+              if dashiteruWaza == "S00200020" or dashiteruWaza == "S00210021" or dashiteruWaza == "S00220022" or dashiteruWaza == "S00230023"       --TATSU STATES (->IGNORE DENJINTIMER)
+                    or dashiteruWaza == "S00340034" or dashiteruWaza == "S00350035" or dashiteruWaza == "S00360036" or dashiteruWaza == "S00370037" --TATSU STATES (->IGNORE DENJINTIMER)
+               then
 
                 else
                     denjinTimer = 0
@@ -291,7 +292,7 @@ function ryuGauges()
             gui.drawbox(offsetX, offsetY, offsetX + 48, offsetY + denjinHaba, 0x00000000, 0x000000FF)
             gui.drawbox(offsetX, offsetY, offsetX + 80, offsetY + denjinHaba, 0x00000000, 0x000000FF)
             gui.drawbox(offsetX, offsetY, offsetX + denjinTimer, offsetY + denjinHaba, barColor, 0x000000FF)
-            if denjinTimer ~= 0 then
+            if memory.readbyte(0x02068D27) ~= 0 then
             end
         end
     end
