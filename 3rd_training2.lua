@@ -314,6 +314,37 @@ button_gesture =
   "HP+HK",
 }
 
+--DASHITERUWAZA BEGIN
+function readReverse(addr,byte)
+	value = 0
+	for i=1,byte,1 do
+		value = value + (memory.readbyte(addr-(i-1)) * (0x100^(i-1)))
+	end
+	return value
+end
+dashiteruWaza = ""
+function dashiteruCall() --TO CALL VALUE FOR DASHITERUWAZA
+ActionType1P = readReverse(0x02068E73,0x01)
+ActionSub1P = readReverse(0x02068D1B,0x02)
+Action1P = readReverse(0x02068E75,0x02)
+if ActionType1P == 1 then
+			ActionType1PJapanese ="G"
+		elseif ActionType1P == 2 then
+			ActionType1PJapanese = "T"
+		elseif ActionType1P == 4 then
+			ActionType1PJapanese = "A"
+		elseif ActionType1P == 5 then
+			ActionType1PJapanese = "S"
+		elseif ActionType1P == 7 then
+			ActionType1PJapanese = "M"
+		else
+			ActionType1PJapanese = "N"
+		end
+dashiteruWaza = ActionType1PJapanese..string.format("%04x",ActionSub1P)..string.format("%04x",Action1P)
+return dashiteruWaza
+end
+--DASHITERUWAZA END
+
 function make_input_sequence(_stick, _button)
   if _button == "recording" then
     return nil
