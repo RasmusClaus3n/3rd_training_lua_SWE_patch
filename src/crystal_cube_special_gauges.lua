@@ -66,6 +66,7 @@ function numSpaceLeft(val, keta)
 end
 
 function assistMode()
+    -- Helper vars
     assistHaba = 2
     chargeView = 1
     kaitenView = 1
@@ -74,14 +75,15 @@ function assistMode()
     dashiteruWaza = "S00280028"
     denjinLv = 0
     denjinTimer = 0
-    --airTimerView()
 
-    --GUI--
+    -- GUI vars
     offsetChargeGauge = 8
     offsetLightningLegsGauge = 8
     offsetKaitenGauge = 14
     denjinHaba = 4
     lightningLegsWidth = 4
+
+    --Charge Gauge for ??? trigger
     if memory.readbyte(0x2011387) == 0x01 then
         offsetX = 180
         offsetY = 180
@@ -97,6 +99,7 @@ function assistMode()
             end
         end
     end
+    -- Denjin Mode trigger
     if memory.readbyte(0x2011387) == 0x02 then
         offsetX = 170
         offsetY = 190
@@ -168,7 +171,7 @@ function assistMode()
                 if memory.readbyte(0x02068D27) ~= 0 then
                 end
             end
-        end --Denjin view end
+        end
     end
     if memory.readbyte(0x2011387) == 0x03 then
     end
@@ -176,6 +179,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x05 then
     end
+    -- Kaiten Mode trigger
     if memory.readbyte(0x2011387) == 0x06 then
         offsetX = 174
         offsetY = 160
@@ -257,6 +261,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x08 then
     end
+    --Charge mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x09 then
         offsetX = 180
         offsetY = 180
@@ -272,6 +277,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x0C then
     end
+    --Charge mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x0D then
         offsetX = 180
         offsetY = 180
@@ -287,6 +293,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x0F then
     end
+    -- Lightning Legs Mode trigger
     if memory.readbyte(0x2011387) == 0x10 then
         offsetX = 170
         offsetY = 160
@@ -316,6 +323,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x11 then
     end
+    -- Charge mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x12 then
         offsetX = 180
         offsetY = 180
@@ -327,6 +335,7 @@ function assistMode()
     end
     if memory.readbyte(0x2011387) == 0x13 then
     end
+    -- Charge mode for ??? trigger
     if memory.readbyte(0x2011387) == 0x14 then
         offsetX = 180
         offsetY = 180
@@ -339,5 +348,3 @@ function assistMode()
         end
     end
 end
-
--- KAITEN MODE TRIGGER END
