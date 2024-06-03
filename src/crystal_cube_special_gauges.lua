@@ -18,7 +18,7 @@ function returnSelectedCharacters()
     remy_is_selected = memory.readbyte(0x2011387) == 0x14
     urien_is_selected = memory.readbyte(0x2011387) == 0x0D
     -- Irrelevant characters
-    elena_is_selcted = memory.readbyte(0x2011387) == 0x08
+    elena_is_selected = memory.readbyte(0x2011387) == 0x08
     dudley_is_selected = memory.readbyte(0x2011387) == 0x04
     gouki_is_selected = memory.readbyte(0x2011387) == 0x0E
     ibuki_is_selected = memory.readbyte(0x2011387) == 0x07
@@ -223,66 +223,41 @@ function hugoGauges()
 end
 
 function ryuGauges()
+    denjinHaba = 4
     offsetX = 170
     offsetY = 190
+    denjinLv = 0
     if denjinView == 1 then
-        if memory.readbyte(0x020154D3) == 2 then -- SA3 Denjin is selected
-            gui.text(50, 50, "Denjin?")
+        denjinIsSelected = memory.readbyte(0x020154D3) == 2
+        if denjinIsSelected then
             barColor = 0x00000000
-            if dashiteruWaza == "S00280028" -- Wtf is this
-                or dashiteruWaza == "N0028000d"
-                or dashiteruWaza == "N00280013"
-                or dashiteruWaza == "N00280014"
-                or dashiteruWaza == "N00280015"
-                or dashiteruWaza == "N00280016"
-                or dashiteruWaza == "N00280017"
-                or dashiteruWaza == "S00290028"
-                or dashiteruWaza == "N0029000d"
-                or dashiteruWaza == "N00290013"
-                or dashiteruWaza == "N00290014"
-                or dashiteruWaza == "N00290015"
-                or dashiteruWaza == "N00290016"
-                or dashiteruWaza == "N00290017"
-                or dashiteruWaza == "S002a0028"
-                or dashiteruWaza == "N002a000d"
-                or dashiteruWaza == "N002a0013"
-                or dashiteruWaza == "N002a0014"
-                or dashiteruWaza == "N002a0015"
-                or dashiteruWaza == "N002a0016"
-                or dashiteruWaza == "N002a0017"
-            then
-                denjinTimer = memory.readbyte(0x02068D27)
-                denjin = memory.readbyte(0x02068D2D)
-                if denjin == 3 then
-                    denjinLv = 1
-                    barColor = 0x0080FFFF
-                elseif denjin == 9 then
-                    denjinLv = 2
-                    barColor = 0x00FFFFFF
-                elseif denjin == 14 then
-                    denjinLv = 3
-                    barColor = 0x80FFFFFF
-                elseif denjin == 19 then
-                    denjinLv = 4
-                    barColor = 0xFEFEFEFF
-                    if denjinTimer == 0 then
-                        denjinLv = 5
-                    end
+            denjinTimer = memory.readbyte(0x02068D27)
+            denjin = memory.readbyte(0x02068D2D)
+
+            -- if denjinTimer ~= 0 then
+            if denjin >= 3 and denjin < 9 then
+                denjinLv = 1
+                barColor = 0x0080FFFF
+            elseif denjin >= 9 and denjin < 14 then
+                denjinLv = 2
+                barColor = 0x00FFFFFF
+            elseif denjin >= 14 and denjin < 19 then
+                denjinLv = 3
+                barColor = 0x80FFFFFF
+            elseif denjin == 19 then
+                denjinLv = 4
+                barColor = 0xFEFEFEFF
+                if denjinTimer == 0 then
+                    denjinLv = 5
                 end
             else
-                if dashiteruWaza == "S00200020" or dashiteruWaza == "S00210021" or dashiteruWaza == "S00220022" or dashiteruWaza == "S00230023"
-                    or dashiteruWaza == "S00340034" or dashiteruWaza == "S00350035" or dashiteruWaza == "S00360036" or dashiteruWaza == "S00370037"
-                then
+                denjinLv = 0
+            end
+            -- end
 
-                else
-                    denjinTimer = 0
-                    memory.writebyte(0x02068D27, 0x00)
-                    denjinLv = 0
-                    memory.writebyte(0x02068D2D, 0x00)
-                end
-            end
-            if dashiteruWaza == "N0028000d" or dashiteruWaza == "N0029000d" or dashiteruWaza == "N002a000d" then
-            end
+            gui.text(50, 50, "Denjin: " .. denjin)
+            gui.text(50, 60, "Denjin timer: " .. denjinTimer)
+
             gui.text(offsetX - 10, offsetY, numSpaceLeft(denjinTimer, 2))
             gui.text(offsetX - 38, offsetY, "LV_" .. denjinLv)
             offsetY = offsetY + 1
@@ -291,8 +266,9 @@ function ryuGauges()
             gui.drawbox(offsetX, offsetY, offsetX + 48, offsetY + denjinHaba, 0x00000000, 0x000000FF)
             gui.drawbox(offsetX, offsetY, offsetX + 80, offsetY + denjinHaba, 0x00000000, 0x000000FF)
             gui.drawbox(offsetX, offsetY, offsetX + denjinTimer, offsetY + denjinHaba, barColor, 0x000000FF)
-            if denjinTimer ~= 0 then
-            end
+            memory.writebyte(0x02068D2D, 0x00)
+        else
+            denjinLv = 0
         end
     end
 end
@@ -353,9 +329,6 @@ function assistMode()
     kaitenView = 1
     lightningLegsView = 1
     denjinView = 1
-    dashiteruWaza = "S00280028"
-    denjinLv = 0
-    denjinTimer = 0
 
     -- GUI vars
     offsetChargeGauge = 8
@@ -390,7 +363,7 @@ function assistMode()
         remyGauges()
     end
 
-    -- Irrelevant character is seleceted
+    -- Irrelevant character is selected
     if
         elena_is_selected
         or dudley_is_selected
