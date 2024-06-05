@@ -1,5 +1,7 @@
 -- Helper functions
 
+
+
 function bitReturn(value, bitnum)
     re = value
     re = SHIFT(re, bitnum - 31)
@@ -8,28 +10,29 @@ function bitReturn(value, bitnum)
 end
 
 function returnSelectedCharacters()
+    p1_char_selectByte = memory.readbyte(0x2011387)
     -- Relevant characters
-    alex_is_selected = memory.readbyte(0x2011387) == 0x01
-    chun_is_selected = memory.readbyte(0x2011387) == 0x10
-    hugo_is_selected = memory.readbyte(0x2011387) == 0x06
-    ryu_is_selected = memory.readbyte(0x2011387) == 0x02
-    oro_is_selected = memory.readbyte(0x2011387) == 0x09
-    q_is_selected = memory.readbyte(0x2011387) == 0x12
-    remy_is_selected = memory.readbyte(0x2011387) == 0x14
-    urien_is_selected = memory.readbyte(0x2011387) == 0x0D
+    alex_is_selected = p1_char_selectByte == 0x01
+    chun_is_selected = p1_char_selectByte == 0x10
+    hugo_is_selected = p1_char_selectByte == 0x06
+    ryu_is_selected = p1_char_selectByte == 0x02
+    oro_is_selected = p1_char_selectByte == 0x09
+    q_is_selected = p1_char_selectByte == 0x12
+    remy_is_selected = p1_char_selectByte == 0x14
+    urien_is_selected = p1_char_selectByte == 0x0D
     -- Irrelevant characters
-    elena_is_selected = memory.readbyte(0x2011387) == 0x08
-    dudley_is_selected = memory.readbyte(0x2011387) == 0x04
-    gouki_is_selected = memory.readbyte(0x2011387) == 0x0E
-    ibuki_is_selected = memory.readbyte(0x2011387) == 0x07
-    ken_is_selected = memory.readbyte(0x2011387) == 0x0B
-    makoto_is_selected = memory.readbyte(0x2011387) == 0x11
-    necro_is_selected = memory.readbyte(0x2011387) == 0x05
-    sean_is_selected = memory.readbyte(0x2011387) == 0x0C
-    shin_gouki_is_selected = memory.readbyte(0x2011387) == 0x0F
-    twelve_is_selected = memory.readbyte(0x2011387) == 0x13
-    yun_is_selected = memory.readbyte(0x2011387) == 0x03
-    yang_is_selected = memory.readbyte(0x2011387) == 0x0A
+    elena_is_selected = p1_char_selectByte == 0x08
+    dudley_is_selected = p1_char_selectByte == 0x04
+    gouki_is_selected = p1_char_selectByte == 0x0E
+    ibuki_is_selected = p1_char_selectByte == 0x07
+    ken_is_selected = p1_char_selectByte == 0x0B
+    makoto_is_selected = p1_char_selectByte == 0x11
+    necro_is_selected = p1_char_selectByte == 0x05
+    sean_is_selected = p1_char_selectByte == 0x0C
+    shin_gouki_is_selected = p1_char_selectByte == 0x0F
+    twelve_is_selected = p1_char_selectByte == 0x13
+    yun_is_selected = p1_char_selectByte == 0x03
+    yang_is_selected = p1_char_selectByte == 0x0A
 end
 
 function chargeGauge(str, x, y, charge_move, address_timer, x_adjust_left)
@@ -54,6 +57,13 @@ function chargeGauge(str, x, y, charge_move, address_timer, x_adjust_left)
 end
 
 function kaitenGauge(str, x, y, address_juji, address_timer, timerOffset, x_adjust_left)
+    local margin = 2
+
+    local _gauge_height = 4
+    local _gauge_background_color = 0xD6E7EF77
+    local _gauge_valid_fill_color = 0x08CF00FF
+
+
     if x_adjust_left == nil then
         gui.text(x - 24, y, str)
     else
@@ -87,6 +97,9 @@ function kaitenGauge(str, x, y, address_juji, address_timer, timerOffset, x_adju
     x = x + timerOffset
     gui.drawbox(x, y, x + 32, y + 4, 0x00000000, 0x000000FF)
     gui.drawbox(x, y, x + (memory.readbyte(address_timer)), y + 4, 0x00C080FF, 0x000000FF)
+    --TEST
+    draw_gauge(x + margin, y + 24, 99, _gauge_height + 1, address_timer / 99, _gauge_valid_fill_color,
+        _gauge_background_color, nil, true)
 end
 
 function numSpaceLeft(val, keta)
@@ -223,53 +236,63 @@ function hugoGauges()
 end
 
 function ryuGauges()
-    denjinHaba = 4
+    denjinLv = 0
+    denjin = 0
+    denjinTimer = 0
+    denjinGaugeWidth = 6
     offsetX = 170
     offsetY = 190
-    denjinLv = 0
+    buttons_pressed = memory.readbyte(0x206AA8D)
+
     if denjinView == 1 then
         denjinIsSelected = memory.readbyte(0x020154D3) == 2
         if denjinIsSelected then
             barColor = 0x00000000
-            denjinTimer = memory.readbyte(0x02068D27)
-            denjin = memory.readbyte(0x02068D2D)
 
-            -- if denjinTimer ~= 0 then
-            if denjin >= 3 and denjin < 9 then
+            if buttons_pressed == 0x0 then
+                memory.writebyte(0x02068D27, 0x00) -- Set denjin timer to 0
+                memory.writebyte(0x02068D2D, 0x00) -- Set denjin to 0
+            else
+                denjinTimer = memory.readbyte(0x02068D27)
+                denjin = memory.readbyte(0x02068D2D)
+            end
+
+            if denjin == 3 then
                 denjinLv = 1
                 barColor = 0x0080FFFF
-            elseif denjin >= 9 and denjin < 14 then
+            elseif denjin == 9 then
                 denjinLv = 2
                 barColor = 0x00FFFFFF
-            elseif denjin >= 14 and denjin < 19 then
+            elseif denjin == 14 then
                 denjinLv = 3
-                barColor = 0x80FFFFFF
+                barColor = 0x00FFFFFF
             elseif denjin == 19 then
                 denjinLv = 4
-                barColor = 0xFEFEFEFF
+                barColor = 0x43ff64d9 --0xFEFEFEFF
                 if denjinTimer == 0 then
                     denjinLv = 5
                 end
             else
                 denjinLv = 0
             end
-            -- end
-
-            gui.text(50, 50, "Denjin: " .. denjin)
-            gui.text(50, 60, "Denjin timer: " .. denjinTimer)
-
-            gui.text(offsetX - 10, offsetY, numSpaceLeft(denjinTimer, 2))
-            gui.text(offsetX - 38, offsetY, "LV_" .. denjinLv)
-            offsetY = offsetY + 1
-            gui.drawbox(offsetX, offsetY, offsetX + 8, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-            gui.drawbox(offsetX, offsetY, offsetX + 24, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-            gui.drawbox(offsetX, offsetY, offsetX + 48, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-            gui.drawbox(offsetX, offsetY, offsetX + 80, offsetY + denjinHaba, 0x00000000, 0x000000FF)
-            gui.drawbox(offsetX, offsetY, offsetX + denjinTimer, offsetY + denjinHaba, barColor, 0x000000FF)
-            memory.writebyte(0x02068D2D, 0x00)
-        else
-            denjinLv = 0
         end
+
+        gui.text(50, 50, "denjin: " .. denjin)
+        gui.text(50, 60, "denjin_timer " .. denjinTimer)
+        gui.text(50, 70, "superfreeze_decount 1: " .. memory.readbyte(0x0202922B))
+        gui.text(50, 80, "superfreeze_decount 2: " .. memory.readbyte(0x02028A2B))
+        gui.text(50, 100, "button_address: " .. memory.readbyte(0x206AA8D))
+
+        gui.text(offsetX - 15, offsetY + 1, numSpaceLeft(denjinTimer, 2))
+        gui.text(offsetX - 38, offsetY + 1, "LV_" .. denjinLv)
+        offsetY = offsetY + 1
+        gui.drawbox(offsetX, offsetY, offsetX + 8, offsetY + denjinGaugeWidth, 0x00000000, 0x000000FF)
+        gui.drawbox(offsetX, offsetY, offsetX + 24, offsetY + denjinGaugeWidth, 0x00000000, 0x000000FF)
+        gui.drawbox(offsetX, offsetY, offsetX + 48, offsetY + denjinGaugeWidth, 0x00000000, 0x000000FF)
+        gui.drawbox(offsetX, offsetY, offsetX + 80, offsetY + denjinGaugeWidth, 0x00000000, 0x000000FF)
+        gui.drawbox(offsetX, offsetY, offsetX + denjinTimer, offsetY + denjinGaugeWidth, barColor, 0x000000FF)
+    else
+        --Nothing happens!
     end
 end
 
@@ -334,7 +357,7 @@ function assistMode()
     offsetChargeGauge = 8
     offsetLightningLegsGauge = 8
     offsetKaitenGauge = 14
-    denjinHaba = 4
+    denjinGaugeWidth = 4
     lightningLegsWidth = 4
 
     -- Relevant character is seleceted

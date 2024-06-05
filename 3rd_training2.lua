@@ -61,6 +61,8 @@ require("src/attack_data")
 require("src/frame_advantage")
 require("src/character_select")
 require("src/crystal_cube_special_gauges")
+require("src/manual_inputs")
+require("src/libs/luacolors")
 
 recording_slot_count = 30
 
@@ -1807,6 +1809,7 @@ main_menu = make_multitab_menu(
         button_menu_item("Clear all slots", clear_all_slots),
         button_menu_item("Save slot to file", open_save_popup),
         button_menu_item("Load slot from file", open_load_popup),
+        button_menu_item("Create manual input", open_manual_input_popup)
       }
     },
     {

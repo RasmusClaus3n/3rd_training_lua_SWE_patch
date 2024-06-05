@@ -12,7 +12,8 @@ elseif rom_name == "sfiii4n" then
   is_4rd_strike = true
 else
   print("-----------------------------")
-  print("WARNING: You are not using a rom supported by this script. Some of the features might not be working correctly.")
+  print(
+  "WARNING: You are not using a rom supported by this script. Some of the features might not be working correctly.")
   print("-----------------------------")
   rom_name = "sfiii3nr1"
 end
