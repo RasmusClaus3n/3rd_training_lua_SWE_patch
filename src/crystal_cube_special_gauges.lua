@@ -243,9 +243,9 @@ function ryuGauges()
     offsetX = 170
     offsetY = 190
     buttons_pressed = memory.readbyte(0x206AA8D)
+    denjinIsSelected = memory.readbyte(0x020154D3) == 2
 
     if denjinView == 1 then
-        denjinIsSelected = memory.readbyte(0x020154D3) == 2
         if denjinIsSelected then
             barColor = 0x00000000
 
@@ -259,16 +259,16 @@ function ryuGauges()
 
             if denjin == 3 then
                 denjinLv = 1
-                barColor = 0x0080FFFF
+                barColor = 0x00FFFF59
             elseif denjin == 9 then
                 denjinLv = 2
-                barColor = 0x00FFFFFF
+                barColor = 0x00FFFFA9
             elseif denjin == 14 then
                 denjinLv = 3
-                barColor = 0x00FFFFFF
+                barColor = 0x00FFFFE9
             elseif denjin == 19 then
                 denjinLv = 4
-                barColor = 0x43ff64d9 --0xFEFEFEFF
+                barColor = 0x00FFFFf9 --0xFEFEFEFF
                 if denjinTimer == 0 then
                     denjinLv = 5
                 end
@@ -277,11 +277,14 @@ function ryuGauges()
             end
         end
 
-        gui.text(50, 50, "denjin: " .. denjin)
-        gui.text(50, 60, "denjin_timer " .. denjinTimer)
-        gui.text(50, 70, "superfreeze_decount 1: " .. memory.readbyte(0x0202922B))
-        gui.text(50, 80, "superfreeze_decount 2: " .. memory.readbyte(0x02028A2B))
-        gui.text(50, 100, "button_address: " .. memory.readbyte(0x206AA8D))
+        -- gui.text(50, 50, "denjin: " .. denjin)
+        -- gui.text(50, 60, "denjin_timer " .. denjinTimer)
+
+        gui.text(50, 100, "? " .. memory.readbyte(0x02069616))
+        memory.writebyte(0x02069617, -52)
+
+
+        --memory.writebyte(0x02069616, 12)
 
         gui.text(offsetX - 15, offsetY + 1, numSpaceLeft(denjinTimer, 2))
         gui.text(offsetX - 38, offsetY + 1, "LV_" .. denjinLv)

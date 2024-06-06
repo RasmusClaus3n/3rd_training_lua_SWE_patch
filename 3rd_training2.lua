@@ -16,6 +16,7 @@ print("- In normal mode, press \"Coin\" to start/stop replay")
 print("- Lua Hotkey 1 (alt+1) to return to character select screen")
 print("")
 
+
 -- Kudos to indirect contributors:
 -- *esn3s* for his work on 3s frame data : http://baston.esn3s.com/
 -- *dammit* for his work on 3s hitbox display script : https://dammit.typepad.com/blog/2011/10/improved-3rd-strike-hitboxes.html
@@ -2622,6 +2623,17 @@ function on_gui()
 
   if is_in_match and training_settings.display_special_gauges then
     assistMode()
+    gui.text(50, 100, "? " .. memory.readbyte(0x02069616))
+    --TEST123
+    -- gui.text(50, 50, "1: " .. memory.readbyte(0x00534294))
+    -- gui.text(50, 60, "2: " .. memory.readbyte(0x005366BD))
+    -- gui.text(50, 70, "3: " .. memory.readbyte(0x00539BE0))
+    -- gui.text(50, 80, "4: " .. memory.readbyte(0x0053BBD1))
+    -- gui.text(50, 90, "5: " .. memory.readbyte(0x0053DA78))
+    -- gui.text(50, 100, "6: " .. memory.readbyte(0x0054004D))
+    -- gui.text(50, 110, "7: " .. memory.readbyte(0x005429D1))
+    -- gui.text(50, 120, "8: " .. memory.readbyte(0x00543D34))
+    -- gui.text(50, 130, "9: " .. memory.readbyte(0x0054451B))
   end
 
   if is_in_match and special_training_mode[training_settings.special_training_current_mode] == "parry" then
